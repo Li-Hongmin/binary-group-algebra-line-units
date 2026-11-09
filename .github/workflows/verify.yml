@@ -1,0 +1,34 @@
+name: verify
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare a fresh working copy
+        run: cp -r verification work
+      - name: "Sections 3-7: exhaustive exact checks over GF(4), GF(8), GF(16)"
+        working-directory: work
+        env: {OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '1'}
+        run: |
+          set -eo pipefail
+          python check_line_gates.py > out_line_gates.log
+      - name: "Section 8: exact count (C++17)"
+        working-directory: work
+        env: {OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '1'}
+        run: |
+          set -eo pipefail
+          cd f16-count && g++ -std=c++17 -O3 exposed_column_rank_counter.cpp -o rc && ./rc --q 4 > out_q4.jsonl && ./rc --q 16 > out_q16.jsonl
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification-output
+          path: work/
+          retention-days: 14

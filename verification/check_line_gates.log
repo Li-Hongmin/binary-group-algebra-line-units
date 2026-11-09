@@ -1,0 +1,10 @@
+gate/survival checks done q=4
+gate/survival checks done q=8
+exposure checks done q=4 rho=2 (max ratio orbit/bound 0.124)
+exposure checks done q=4 rho=3 (max ratio orbit/bound 0.207)
+exposure checks done q=8 rho=2 (max ratio orbit/bound 0.017)
+repeated-slope checks done q=8
+repeated-slope checks done q=16
+association checks done q=4 rho=2
+association checks done q=4 rho=3
+ALL CHECKS PASSED
